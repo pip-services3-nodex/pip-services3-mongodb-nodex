@@ -113,10 +113,11 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
      * @param collection    (optional) a collection name.
      */
     constructor(collection) {
-        if (collection == null) {
-            throw new Error("Collection name could not be null");
-        }
         super(collection);
+        /**
+         * Flag to turn on automated string ID generation
+         */
+        this._autoGenerateId = true;
     }
     /**
      * Converts the given object from the public partial format.
@@ -182,7 +183,11 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
         // Assign unique id
         let newItem = Object.assign({}, item);
         delete newItem.id;
-        newItem._id = item.id || pip_services3_commons_nodex_1.IdGenerator.nextLong();
+        newItem._id = item.id;
+        // Auto generate id
+        if (newItem._id == null && this._autoGenerateId) {
+            newItem._id = pip_services3_commons_nodex_1.IdGenerator.nextLong();
+        }
         return super.create(correlationId, newItem);
     }
     /**
@@ -201,7 +206,11 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
             // Assign unique id
             let newItem = Object.assign({}, item);
             delete newItem.id;
-            newItem._id = item.id || pip_services3_commons_nodex_1.IdGenerator.nextLong();
+            newItem._id = item.id;
+            // Auto generate id
+            if (newItem._id == null && this._autoGenerateId) {
+                newItem._id = pip_services3_commons_nodex_1.IdGenerator.nextLong();
+            }
             newItem = this.convertFromPublic(newItem);
             let filter = {
                 _id: newItem._id

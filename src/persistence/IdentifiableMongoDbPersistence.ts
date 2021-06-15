@@ -105,6 +105,10 @@ import { MongoDbPersistence } from './MongoDbPersistence';
  */
 export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> extends MongoDbPersistence<T>
     implements IWriter<T, K>, IGetter<T, K>, ISetter<T> {
+    /**
+     * Flag to turn on automated string ID generation
+     */
+    protected _autoGenerateId: boolean = true;
 
     /**
      * Creates a new instance of the persistence component.
@@ -112,10 +116,6 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
      * @param collection    (optional) a collection name.
      */
     public constructor(collection: string) {
-        if (collection == null) {
-            throw new Error("Collection name could not be null");
-        }
-
         super(collection);
     }
 
@@ -185,7 +185,12 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
         // Assign unique id
         let newItem: any = Object.assign({}, item);
         delete newItem.id;
-        newItem._id = item.id || IdGenerator.nextLong();
+        newItem._id = item.id;
+
+        // Auto generate id
+        if (newItem._id == null && this._autoGenerateId) {
+            newItem._id = IdGenerator.nextLong();
+        }
 
         return super.create(correlationId, newItem);
     }
@@ -206,7 +211,13 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
         // Assign unique id
         let newItem: any = Object.assign({}, item);
         delete newItem.id;
-        newItem._id = item.id || IdGenerator.nextLong();
+        newItem._id = item.id;
+
+        // Auto generate id
+        if (newItem._id == null && this._autoGenerateId) {
+            newItem._id = IdGenerator.nextLong();
+        }
+
         newItem = this.convertFromPublic(newItem);
 
         let filter = {

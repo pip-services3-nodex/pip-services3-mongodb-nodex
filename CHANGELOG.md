@@ -4,3 +4,6 @@
 
 Initial public release
 
+### Features
+* Added _autoGenerateId flag to IdentifiableMongoDbPersistence
+
