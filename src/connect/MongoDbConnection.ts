@@ -1,4 +1,6 @@
 /** @module connect */
+import { Db, MongoClient, MongoClientOptions } from 'mongodb';
+
 import { IReferenceable } from 'pip-services3-commons-nodex';
 import { IReferences } from 'pip-services3-commons-nodex';
 import { IConfigurable } from 'pip-services3-commons-nodex';
@@ -8,6 +10,7 @@ import { ConnectionException } from 'pip-services3-commons-nodex';
 import { CompositeLogger } from 'pip-services3-components-nodex';
 
 import { MongoDbConnectionResolver } from './MongoDbConnectionResolver';
+
 
 /**
  * MongoDB connection using plain driver.
@@ -76,7 +79,7 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
     /**
      * The MongoDB connection object.
      */
-    protected _connection: any;
+    protected _connection: MongoClient;
     /**
      * The MongoDB database name.
      */
@@ -84,7 +87,7 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
     /**
      * The MongoDb database object.
      */
-    protected _db: any;
+    protected _db: Db;
 
     /**
      * Creates a new instance of the connection component.
@@ -123,7 +126,7 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
         return this._connection != null;
     }
 
-    private composeSettings(): any {
+    private composeSettings(): MongoClientOptions {
         let maxPoolSize = this._options.getAsNullableInteger("max_pool_size");
         let keepAlive = this._options.getAsNullableInteger("keep_alive");
         let connectTimeoutMS = this._options.getAsNullableInteger("connect_timeout");
@@ -138,11 +141,11 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
         let authUser = this._options.getAsNullableString("auth_user");
         let authPassword = this._options.getAsNullableString("auth_password");
 
-        let settings: any = {
-            poolSize: maxPoolSize,
-            keepAlive: keepAlive,
+        let settings: MongoClientOptions = {
+            maxPoolSize: maxPoolSize,
+            keepAliveInitialDelay: keepAlive,
             //autoReconnect: autoReconnect,
-            reconnectInterval: reconnectInterval,
+            // reconnectInterval: reconnectInterval,
             connectTimeoutMS: connectTimeoutMS,
             socketTimeoutMS: socketTimeoutMS,
             // ssl: ssl,
@@ -177,19 +180,11 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
         this._logger.debug(correlationId, "Connecting to mongodb");
 
         try {
-            let settings = this.composeSettings();
+            let settings: MongoClientOptions = this.composeSettings();
 
-            settings.useNewUrlParser = true;
-            settings.useUnifiedTopology = true;
+            
 
-            let MongoClient = require('mongodb').MongoClient;
-
-            let client = await new Promise<any>((resolve, reject) => {
-                MongoClient.connect(uri, settings, (err, client) => {
-                    if (err == null) resolve(client);
-                    else reject(err);
-                });
-            });
+            let client = await new MongoClient(uri, settings).connect();
 
             this._connection = client;                
             this._db = client.db();
@@ -213,12 +208,7 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
             return;
         }
 
-        await new Promise((resolve, reject) => {
-            this._connection.close((err) => {
-                if (err == null) resolve(null);
-                else reject(err);
-            });
-        });
+        await this._connection.close();
 
         this._connection = null;
         this._db = null;
@@ -227,11 +217,11 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
         this._logger.debug(correlationId, "Disconnected from mongodb database %s", this._databaseName);
     }
 
-    public getConnection(): any {
+    public getConnection(): MongoClient {
         return this._connection;
     }
 
-    public getDatabase(): any {
+    public getDatabase(): Db {
         return this._db;
     }
 

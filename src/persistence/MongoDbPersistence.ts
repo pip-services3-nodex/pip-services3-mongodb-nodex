@@ -1,4 +1,6 @@
 /** @module persistence */
+import { Collection, Db, Document, FindOptions } from 'mongodb';
+
 import { IReferenceable } from 'pip-services3-commons-nodex';
 import { IUnreferenceable } from 'pip-services3-commons-nodex';
 import { IReferences } from 'pip-services3-commons-nodex';
@@ -150,11 +152,11 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
     /**
      * The MongoDb database object.
      */
-    protected _db: any;
+    protected _db: Db;
     /**
      * The MongoDb collection object.
      */
-    protected _collection: any;
+    protected _collection: Collection<Document>;
 
     protected _maxPageSize: number = 100;
 
@@ -326,24 +328,14 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
         this._databaseName = this._connection.getDatabaseName();
         
         try {
-            let collection = await new Promise<any>((resolve, reject) => {
-                this._db.collection(this._collectionName, (err, collection) => {
-                    if (err == null) resolve(collection);
-                    else reject(err);
-                });
-            });
+            let collection = await this._db.collection(this._collectionName);
 
             // Define database schema
             this.defineSchema();
 
             // Recreate indexes
             for (let index of this._indexes) {
-                await new Promise((resolve, reject) => {
-                    collection.createIndex(index.keys, index.options, (err) => {
-                        if (err == null) resolve(null);
-                        else reject(err);
-                    });
-                });
+                await collection.createIndex(index.keys, index.options);
 
                 let options = index.options || {};
                 let indexName = options.name || Object.keys(index.keys).join(',');
@@ -395,12 +387,7 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
             throw new Error('Collection name is not defined');
         }
 
-        await new Promise((resolve, reject) => {
-            this._collection.deleteMany({}, (err, result) => {
-                if (err == null) resolve(null);
-                else reject(err);
-            });
-        });
+        await this._collection.deleteMany({});
     }
 
     /**
@@ -426,18 +413,13 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
         let pagingEnabled = paging.total;
 
         // Configure options
-        let options: any = {};
+        let options: FindOptions = {};
 
         if (skip >= 0) options.skip = skip;
         options.limit = take;
         if (sort != null) options.sort = sort;
 
-        let items = await new Promise<any[]>((resolve, reject) => {
-            this._collection.find(filter, options).project(select).toArray((err, items) => {
-                if (err == null) resolve(items);
-                else reject(err);
-            });
-        });
+        let items: any = await this._collection.find(filter, options).project(select).toArray();
 
         if (items != null) {
             this._logger.trace(correlationId, "Retrieved %d from %s", items.length, this._collectionName);
@@ -448,12 +430,8 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
 
         let count: number = null;
         if (pagingEnabled) {
-            count = await new Promise<number>((resolve, reject) => {
-                this._collection.countDocuments(filter, (err, count) => {
-                    if (err == null) resolve(count);
-                    else reject(err);
-                });
-            });
+            count = await this._collection.countDocuments(filter);
+            
         }
                         
         return new DataPage<T>(items, count);
@@ -470,12 +448,7 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
      * @returns                 a number of filtered items.
      */
     protected async getCountByFilter(correlationId: string, filter: any): Promise<number> {
-        let count = await new Promise<number>((resolve, reject) => {
-            this._collection.countDocuments(filter, (err, count) => {
-                if (err == null) resolve(count);
-                else reject(err);
-            });
-        });
+        let count = await this._collection.countDocuments(filter);
 
         if (count != null) {
             this._logger.trace(correlationId, "Counted %d items in %s", count, this._collectionName);
@@ -499,15 +472,10 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
      */
     protected async getListByFilter(correlationId: string, filter: any, sort: any, select: any): Promise<T[]> {
         // Configure options
-        let options: any = {};
+        let options: FindOptions = {};
         if (sort != null) options.sort = sort;
 
-        let items = await new Promise<any[]>((resolve, reject) => {
-            this._collection.find(filter, options).project(select).toArray((err, items) => {
-                if (err == null) resolve(items);
-                else reject(err);
-            });
-        });
+        let items: any = await this._collection.find(filter, options).project(select).toArray();
 
         if (items != null) {
             this._logger.trace(correlationId, "Retrieved %d from %s", items.length, this._collectionName);
@@ -530,12 +498,7 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
      * @returns                 a random item.
      */
     protected async getOneRandom(correlationId: string, filter: any): Promise<T> {
-        let count = await new Promise<number>((resolve, reject) => {
-            this._collection.countDocuments(filter, (err, count) => {
-                if (err == null) resolve(count);
-                else reject(err);
-            });
-        });
+        let count = await this._collection.countDocuments(filter);
 
         let pos = Math.trunc(Math.random() * count);
         let options = {
@@ -543,15 +506,10 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
             limit: 1,
         }
 
-        let items = await new Promise<any[]>((resolve, reject) => {
-            this._collection.find(filter, options).toArray((err, items) => {
-                if (err == null) resolve(items);
-                else reject(err);
-            });
-        });
+        let items = await this._collection.find(filter, options).toArray();
 
 
-        let item = (items != null && items.length > 0) ? items[0] : null;
+        let item: any = (items != null && items.length > 0) ? items[0] : null;
 
         if (item == null) {
             this._logger.trace(correlationId, "Random item wasn't found from %s", this._collectionName);
@@ -577,16 +535,16 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
 
         let newItem = this.convertFromPublic(item);
 
-        let result = await new Promise<any>((resolve, reject) => {
-            this._collection.insertOne(newItem, (err, result) => {
-                if (err == null) resolve(result);
-                else reject(err);
-            });
-        });
+        let result = await this._collection.insertOne(newItem);
 
         this._logger.trace(correlationId, "Created in %s with id = %s", this._collectionName, newItem._id);
 
-        newItem = result != null && result.ops ? this.convertToPublic(result.ops[0]) : null;
+        if (result.acknowledged) {
+            newItem = Object.assign({}, item);
+            newItem.id = result.insertedId.toString();
+        } else {
+            newItem = null;
+        }
         return newItem;
     }
 
@@ -600,12 +558,7 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
      * @param filter            (optional) a filter JSON object.
      */
     public async deleteByFilter(correlationId: string, filter: any): Promise<void> {
-        let result = await new Promise<any>((resolve, reject) => {
-            this._collection.deleteMany(filter, (err, result) => {
-                if (err == null) resolve(result);
-                else reject(err);
-            });
-        });
+        let result = await this._collection.deleteMany(filter);
 
         let count = result != null ? result.deletedCount : 0;
         this._logger.trace(correlationId, "Deleted %d items from %s", count, this._collectionName);

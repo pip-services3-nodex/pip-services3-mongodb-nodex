@@ -8,6 +8,7 @@ import { IGetter } from 'pip-services3-data-nodex';
 import { ISetter } from 'pip-services3-data-nodex';
 
 import { MongoDbPersistence } from './MongoDbPersistence';
+import { FindOneAndReplaceOptions, FindOneAndUpdateOptions } from 'mongodb';
 
 /**
  * Abstract persistence component that stores data in MongoDB
@@ -136,11 +137,11 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
      * @param ids               ids of data items to be retrieved
      * @returns                 a data list.
      */
-    public getListByIds(correlationId: string, ids: K[]): Promise<T[]> {
+    public async getListByIds(correlationId: string, ids: K[]): Promise<T[]> {
         let filter = {
             _id: { $in: ids }
         }
-        return this.getListByFilter(correlationId, filter, null, null);
+        return await this.getListByFilter(correlationId, filter, null, null);
     }
 
     /**
@@ -153,12 +154,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
     public async getOneById(correlationId: string, id: K): Promise<T> {
         let filter = { _id: id };
 
-        let item = await new Promise<any>((resolve, reject) => {
-            this._collection.findOne(filter, (err, item) => {
-                if (err == null) resolve(item);
-                else reject(err);
-            });
-        });
+        let item: any = await this._collection.findOne(filter);
 
         if (item == null) {
             this._logger.trace(correlationId, "Nothing found from %s with id = %s", this._collectionName, id);
@@ -177,7 +173,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
      * @param item              an item to be created.
      * @returns                 theß created item.
      */
-    public create(correlationId: string, item: T): Promise<T> {
+    public async create(correlationId: string, item: T): Promise<T> {
         if (item == null) {
             return;
         }
@@ -192,7 +188,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
             newItem._id = IdGenerator.nextLong();
         }
 
-        return super.create(correlationId, newItem);
+        return await super.create(correlationId, newItem);
     }
 
     /**
@@ -224,17 +220,12 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
             _id: newItem._id
         };
 
-        let options = {
-            returnOriginal: false,
+        let options: FindOneAndReplaceOptions = {
+            returnDocument: 'after',
             upsert: true
         };
    
-        let result = await new Promise<any>((resolve, reject) => {
-            this._collection.findOneAndReplace(filter, newItem, options, (err, result) => {
-                if (err == null) resolve(result);
-                else reject(err);
-            });
-        });
+        let result = await this._collection.findOneAndReplace(filter, newItem, options);
 
         if (item != null) {
             this._logger.trace(correlationId, "Set in %s with id = %s", this._collectionName, item.id);
@@ -262,16 +253,11 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
 
         let filter = { _id: item.id };
         let update = { $set: newItem };
-        let options = {
-            returnOriginal: false
+        let options: FindOneAndUpdateOptions = {
+            returnDocument: 'after'
         };
 
-        let result = await new Promise<any>((resolve, reject) => {
-            this._collection.findOneAndUpdate(filter, update, options, (err, result) => {
-                if (err == null) resolve(result);
-                else reject(err);
-            });
-        });
+        let result = await this._collection.findOneAndUpdate(filter, update, options);
 
         this._logger.trace(correlationId, "Updated in %s with id = %s", this._collectionName, item.id);
 
@@ -297,16 +283,11 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
 
         let filter = { _id: id };
         let update = { $set: newItem };
-        let options = {
-            returnOriginal: false
+        let options: FindOneAndUpdateOptions = {
+            returnDocument: 'after'
         };
 
-        let result = await new Promise<any>((resolve, reject) => {
-            this._collection.findOneAndUpdate(filter, update, options, (err, result) => {
-                if (err == null) resolve(result);
-                else reject(err);
-            });
-        });
+        let result = await this._collection.findOneAndUpdate(filter, update, options);
 
         this._logger.trace(correlationId, "Updated partially in %s with id = %s", this._collectionName, id);
 
@@ -324,12 +305,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
     public async deleteById(correlationId: string, id: K): Promise<T> {
         let filter = { _id: id };
         
-        let result = await new Promise<any>((resolve, reject) => {
-            this._collection.findOneAndDelete(filter, (err, result) => {
-                if (err == null) resolve(result);
-                else reject(err);
-            });
-        });
+        let result = await this._collection.findOneAndDelete(filter);
 
         this._logger.trace(correlationId, "Deleted from %s with id = %s", this._collectionName, id);
 
@@ -343,8 +319,8 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
      * @param correlationId     (optional) transaction id to trace execution through call chain.
      * @param ids               ids of data items to be deleted.
      */
-    public deleteByIds(correlationId: string, ids: K[]): Promise<void> {
+    public async deleteByIds(correlationId: string, ids: K[]): Promise<void> {
         let filter = { _id: { $in: ids } };
-        return this.deleteByFilter(correlationId, filter);
+        return await this.deleteByFilter(correlationId, filter);
     }
 }

@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoDbConnection = void 0;
+/** @module connect */
+const mongodb_1 = require("mongodb");
 const pip_services3_commons_nodex_1 = require("pip-services3-commons-nodex");
 const pip_services3_commons_nodex_2 = require("pip-services3-commons-nodex");
 const pip_services3_components_nodex_1 = require("pip-services3-components-nodex");
@@ -114,12 +116,17 @@ class MongoDbConnection {
         let authUser = this._options.getAsNullableString("auth_user");
         let authPassword = this._options.getAsNullableString("auth_password");
         let settings = {
-            poolSize: maxPoolSize,
-            keepAlive: keepAlive,
+            maxPoolSize: maxPoolSize,
+            keepAliveInitialDelay: keepAlive,
             //autoReconnect: autoReconnect,
-            reconnectInterval: reconnectInterval,
+            // reconnectInterval: reconnectInterval,
             connectTimeoutMS: connectTimeoutMS,
             socketTimeoutMS: socketTimeoutMS,
+            // ssl: ssl,
+            // replicaSet: replicaSet,
+            // authSource: authSource,
+            // 'auth.user': authUser,
+            // 'auth.password': authPassword
         };
         if (ssl != null)
             settings.ssl = ssl;
@@ -144,17 +151,7 @@ class MongoDbConnection {
             this._logger.debug(correlationId, "Connecting to mongodb");
             try {
                 let settings = this.composeSettings();
-                settings.useNewUrlParser = true;
-                settings.useUnifiedTopology = true;
-                let MongoClient = require('mongodb').MongoClient;
-                let client = yield new Promise((resolve, reject) => {
-                    MongoClient.connect(uri, settings, (err, client) => {
-                        if (err == null)
-                            resolve(client);
-                        else
-                            reject(err);
-                    });
-                });
+                let client = yield new mongodb_1.MongoClient(uri, settings).connect();
                 this._connection = client;
                 this._db = client.db();
                 this._databaseName = this._db.databaseName;
@@ -174,14 +171,7 @@ class MongoDbConnection {
             if (this._connection == null) {
                 return;
             }
-            yield new Promise((resolve, reject) => {
-                this._connection.close((err) => {
-                    if (err == null)
-                        resolve(null);
-                    else
-                        reject(err);
-                });
-            });
+            yield this._connection.close();
             this._connection = null;
             this._db = null;
             this._databaseName = null;

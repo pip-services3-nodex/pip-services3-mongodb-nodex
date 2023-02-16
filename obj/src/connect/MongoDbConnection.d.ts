@@ -1,4 +1,5 @@
 /** @module connect */
+import { Db, MongoClient } from 'mongodb';
 import { IReferenceable } from 'pip-services3-commons-nodex';
 import { IReferences } from 'pip-services3-commons-nodex';
 import { IConfigurable } from 'pip-services3-commons-nodex';
@@ -60,7 +61,7 @@ export declare class MongoDbConnection implements IReferenceable, IConfigurable,
     /**
      * The MongoDB connection object.
      */
-    protected _connection: any;
+    protected _connection: MongoClient;
     /**
      * The MongoDB database name.
      */
@@ -68,7 +69,7 @@ export declare class MongoDbConnection implements IReferenceable, IConfigurable,
     /**
      * The MongoDb database object.
      */
-    protected _db: any;
+    protected _db: Db;
     /**
      * Creates a new instance of the connection component.
      */
@@ -104,7 +105,7 @@ export declare class MongoDbConnection implements IReferenceable, IConfigurable,
      * @param correlationId 	(optional) transaction id to trace execution through call chain.
      */
     close(correlationId: string): Promise<void>;
-    getConnection(): any;
-    getDatabase(): any;
+    getConnection(): MongoClient;
+    getDatabase(): Db;
     getDatabaseName(): string;
 }

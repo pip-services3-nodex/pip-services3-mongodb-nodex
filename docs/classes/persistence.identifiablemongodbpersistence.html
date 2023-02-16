@@ -215,9 +215,10 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="persistence.identifiablemongodbpersistence.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected">
+						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="persistence.identifiablemongodbpersistence.html#_autogenerateid" class="tsd-kind-icon">_auto<wbr>Generate<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="persistence.identifiablemongodbpersistence.html#_client" class="tsd-kind-icon">_client</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="persistence.identifiablemongodbpersistence.html#_collection" class="tsd-kind-icon">_collection</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="persistence.identifiablemongodbpersistence.html#_collectionname" class="tsd-kind-icon">_collection<wbr>Name</a></li>
@@ -276,7 +277,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Overrides <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:107</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:112</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -300,8 +301,23 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected">
+			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="_autogenerateid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _auto<wbr>Generate<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">_auto<wbr>Generate<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:112</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Flag to turn on automated string ID generation</p>
+						</div>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="_client" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _client</h3>
@@ -309,7 +325,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_client">_client</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:141</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:143</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -321,11 +337,11 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="_collection" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _collection</h3>
-					<div class="tsd-signature tsd-kind-icon">_collection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<div class="tsd-signature tsd-kind-icon">_collection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Collection</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Document</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_collection">_collection</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:157</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:159</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -341,7 +357,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_collectionname">_collectionName</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:149</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:151</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -357,7 +373,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_connection">_connection</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:136</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:138</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -373,7 +389,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_databasename">_databaseName</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:145</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:147</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -385,11 +401,11 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="_db" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _db</h3>
-					<div class="tsd-signature tsd-kind-icon">_db<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<div class="tsd-signature tsd-kind-icon">_db<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Db</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_db">_db</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:153</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:155</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -405,7 +421,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_dependencyresolver">_dependencyResolver</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:127</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:129</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -421,7 +437,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_logger">_logger</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:131</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:133</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -437,7 +453,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#_maxpagesize">_maxPageSize</a></p>
 						<ul>
-							<li>Defined in persistence/MongoDbPersistence.ts:159</li>
+							<li>Defined in persistence/MongoDbPersistence.ts:161</li>
 						</ul>
 					</aside>
 				</section>
@@ -455,7 +471,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:392</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:384</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -487,7 +503,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#clearschema">clearSchema</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:243</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:245</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -510,7 +526,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#close">close</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:368</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:360</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -542,7 +558,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#configure">configure</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:175</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:177</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -574,7 +590,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#convertfrompublic">convertFromPublic</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:276</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:278</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -606,7 +622,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:128</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:129</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -639,7 +655,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#converttopublic">convertToPublic</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:260</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:262</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -672,7 +688,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Overrides <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#create">create</a></p>
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:180</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:176</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -708,7 +724,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#defineschema">defineSchema</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:250</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:252</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -731,7 +747,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#deletebyfilter">deleteByFilter</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:602</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:560</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -770,7 +786,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:313</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:305</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -805,7 +821,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:335</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:322</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -843,7 +859,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#ensureindex">ensureIndex</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:230</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:232</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -881,7 +897,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#getcountbyfilter">getCountByFilter</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:472</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:450</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -922,7 +938,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#getlistbyfilter">getListByFilter</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:500</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:473</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -974,7 +990,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:139</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:140</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1012,7 +1028,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:153</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:154</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1051,7 +1067,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#getonerandom">getOneRandom</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:532</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:500</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1092,7 +1108,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#getpagebyfilter">getPageByFilter</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:419</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:406</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1151,7 +1167,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#isopen">isOpen</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:291</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:293</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1175,7 +1191,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#open">open</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:300</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:302</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1206,7 +1222,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:201</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:202</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1243,7 +1259,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#setreferences">setReferences</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:190</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:192</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1275,7 +1291,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="persistence.mongodbpersistence.html">MongoDbPersistence</a>.<a href="persistence.mongodbpersistence.html#unsetreferences">unsetReferences</a></p>
 								<ul>
-									<li>Defined in persistence/MongoDbPersistence.ts:209</li>
+									<li>Defined in persistence/MongoDbPersistence.ts:211</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1297,7 +1313,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:243</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:245</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1332,7 +1348,7 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:279</li>
+									<li>Defined in persistence/IdentifiableMongoDbPersistence.ts:276</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1394,6 +1410,9 @@ persistence.create(<span class="hljs-string">"123"</span>, { id: <span class="hl
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="persistence.identifiablemongodbpersistence.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="persistence.identifiablemongodbpersistence.html#_autogenerateid" class="tsd-kind-icon">_auto<wbr>Generate<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="persistence.identifiablemongodbpersistence.html#_client" class="tsd-kind-icon">_client</a>

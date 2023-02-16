@@ -1,4 +1,5 @@
 /** @module persistence */
+import { Collection, Db, Document } from 'mongodb';
 import { IReferenceable } from 'pip-services3-commons-nodex';
 import { IUnreferenceable } from 'pip-services3-commons-nodex';
 import { IReferences } from 'pip-services3-commons-nodex';
@@ -127,11 +128,11 @@ export declare class MongoDbPersistence<T> implements IReferenceable, IUnreferen
     /**
      * The MongoDb database object.
      */
-    protected _db: any;
+    protected _db: Db;
     /**
      * The MongoDb collection object.
      */
-    protected _collection: any;
+    protected _collection: Collection<Document>;
     protected _maxPageSize: number;
     /**
      * Creates a new instance of the persistence component.

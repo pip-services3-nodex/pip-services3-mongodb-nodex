@@ -256,26 +256,12 @@ class MongoDbPersistence {
             this._db = this._connection.getDatabase();
             this._databaseName = this._connection.getDatabaseName();
             try {
-                let collection = yield new Promise((resolve, reject) => {
-                    this._db.collection(this._collectionName, (err, collection) => {
-                        if (err == null)
-                            resolve(collection);
-                        else
-                            reject(err);
-                    });
-                });
+                let collection = yield this._db.collection(this._collectionName);
                 // Define database schema
                 this.defineSchema();
                 // Recreate indexes
                 for (let index of this._indexes) {
-                    yield new Promise((resolve, reject) => {
-                        collection.createIndex(index.keys, index.options, (err) => {
-                            if (err == null)
-                                resolve(null);
-                            else
-                                reject(err);
-                        });
-                    });
+                    yield collection.createIndex(index.keys, index.options);
                     let options = index.options || {};
                     let indexName = options.name || Object.keys(index.keys).join(',');
                     this._logger.debug(correlationId, "Created index %s for collection %s", indexName, this._collectionName);
@@ -324,14 +310,7 @@ class MongoDbPersistence {
             if (this._collectionName == null) {
                 throw new Error('Collection name is not defined');
             }
-            yield new Promise((resolve, reject) => {
-                this._collection.deleteMany({}, (err, result) => {
-                    if (err == null)
-                        resolve(null);
-                    else
-                        reject(err);
-                });
-            });
+            yield this._collection.deleteMany({});
         });
     }
     /**
@@ -361,14 +340,7 @@ class MongoDbPersistence {
             options.limit = take;
             if (sort != null)
                 options.sort = sort;
-            let items = yield new Promise((resolve, reject) => {
-                this._collection.find(filter, options).project(select).toArray((err, items) => {
-                    if (err == null)
-                        resolve(items);
-                    else
-                        reject(err);
-                });
-            });
+            let items = yield this._collection.find(filter, options).project(select).toArray();
             if (items != null) {
                 this._logger.trace(correlationId, "Retrieved %d from %s", items.length, this._collectionName);
             }
@@ -376,14 +348,7 @@ class MongoDbPersistence {
             items = items.map(this.convertToPublic);
             let count = null;
             if (pagingEnabled) {
-                count = yield new Promise((resolve, reject) => {
-                    this._collection.countDocuments(filter, (err, count) => {
-                        if (err == null)
-                            resolve(count);
-                        else
-                            reject(err);
-                    });
-                });
+                count = yield this._collection.countDocuments(filter);
             }
             return new pip_services3_commons_nodex_3.DataPage(items, count);
         });
@@ -400,14 +365,7 @@ class MongoDbPersistence {
      */
     getCountByFilter(correlationId, filter) {
         return __awaiter(this, void 0, void 0, function* () {
-            let count = yield new Promise((resolve, reject) => {
-                this._collection.countDocuments(filter, (err, count) => {
-                    if (err == null)
-                        resolve(count);
-                    else
-                        reject(err);
-                });
-            });
+            let count = yield this._collection.countDocuments(filter);
             if (count != null) {
                 this._logger.trace(correlationId, "Counted %d items in %s", count, this._collectionName);
             }
@@ -433,14 +391,7 @@ class MongoDbPersistence {
             let options = {};
             if (sort != null)
                 options.sort = sort;
-            let items = yield new Promise((resolve, reject) => {
-                this._collection.find(filter, options).project(select).toArray((err, items) => {
-                    if (err == null)
-                        resolve(items);
-                    else
-                        reject(err);
-                });
-            });
+            let items = yield this._collection.find(filter, options).project(select).toArray();
             if (items != null) {
                 this._logger.trace(correlationId, "Retrieved %d from %s", items.length, this._collectionName);
             }
@@ -461,27 +412,13 @@ class MongoDbPersistence {
      */
     getOneRandom(correlationId, filter) {
         return __awaiter(this, void 0, void 0, function* () {
-            let count = yield new Promise((resolve, reject) => {
-                this._collection.countDocuments(filter, (err, count) => {
-                    if (err == null)
-                        resolve(count);
-                    else
-                        reject(err);
-                });
-            });
+            let count = yield this._collection.countDocuments(filter);
             let pos = Math.trunc(Math.random() * count);
             let options = {
                 skip: pos >= 0 ? pos : 0,
                 limit: 1,
             };
-            let items = yield new Promise((resolve, reject) => {
-                this._collection.find(filter, options).toArray((err, items) => {
-                    if (err == null)
-                        resolve(items);
-                    else
-                        reject(err);
-                });
-            });
+            let items = yield this._collection.find(filter, options).toArray();
             let item = (items != null && items.length > 0) ? items[0] : null;
             if (item == null) {
                 this._logger.trace(correlationId, "Random item wasn't found from %s", this._collectionName);
@@ -506,16 +443,15 @@ class MongoDbPersistence {
                 return null;
             }
             let newItem = this.convertFromPublic(item);
-            let result = yield new Promise((resolve, reject) => {
-                this._collection.insertOne(newItem, (err, result) => {
-                    if (err == null)
-                        resolve(result);
-                    else
-                        reject(err);
-                });
-            });
+            let result = yield this._collection.insertOne(newItem);
             this._logger.trace(correlationId, "Created in %s with id = %s", this._collectionName, newItem._id);
-            newItem = result != null && result.ops ? this.convertToPublic(result.ops[0]) : null;
+            if (result.acknowledged) {
+                newItem = Object.assign({}, item);
+                newItem.id = result.insertedId.toString();
+            }
+            else {
+                newItem = null;
+            }
             return newItem;
         });
     }
@@ -530,14 +466,7 @@ class MongoDbPersistence {
      */
     deleteByFilter(correlationId, filter) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield new Promise((resolve, reject) => {
-                this._collection.deleteMany(filter, (err, result) => {
-                    if (err == null)
-                        resolve(result);
-                    else
-                        reject(err);
-                });
-            });
+            let result = yield this._collection.deleteMany(filter);
             let count = result != null ? result.deletedCount : 0;
             this._logger.trace(correlationId, "Deleted %d items from %s", count, this._collectionName);
         });
