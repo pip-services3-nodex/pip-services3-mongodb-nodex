@@ -127,6 +127,7 @@ class MongoDbConnection {
             // authSource: authSource,
             // 'auth.user': authUser,
             // 'auth.password': authPassword
+            // authSource: this._databaseName
         };
         if (ssl != null)
             settings.ssl = ssl;

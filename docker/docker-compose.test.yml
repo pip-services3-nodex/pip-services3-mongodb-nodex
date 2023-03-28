@@ -11,10 +11,12 @@ services:
     environment:
       - MONGO_SERVICE_HOST=mongo
       - MONGO_SERVICE_PORT=27017
+      - MONGO_USER=root
+      - MONGO_PASS=example#123
 
   mongo:
     image: mongo:latest
-    # container_name: mongo
-    # ports:
-    #   - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example#123
           

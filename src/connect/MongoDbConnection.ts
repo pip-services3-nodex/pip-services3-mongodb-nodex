@@ -153,6 +153,7 @@ export class MongoDbConnection implements IReferenceable, IConfigurable, IOpenab
             // authSource: authSource,
             // 'auth.user': authUser,
             // 'auth.password': authPassword
+            // authSource: this._databaseName
         };
 
         if (ssl != null)

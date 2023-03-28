@@ -113,21 +113,12 @@ export class MongoDbConnectionResolver implements IReferenceable, IConfigurable 
             hosts += host + (port == null ? '' : ':' + port);
         }
 
-        // Define database
-        let database = '';
-        for (let connection of connections) {
-            database = database || connection.getAsNullableString("database");
-        }
-        if (database.length > 0) {
-            database = '/' + database;
-        }
-
         // Define authentication part
         let auth = '';
         if (credential) {
-            let username = credential.getUsername();
+            let username = encodeURIComponent(credential.getUsername());
             if (username) {
-                let password = credential.getPassword();
+                let password = encodeURIComponent(credential.getPassword());
                 if (password) {
                     auth = username + ':' + password + '@';
                 } else {
@@ -163,7 +154,7 @@ export class MongoDbConnectionResolver implements IReferenceable, IConfigurable 
         }
 
         // Compose uri
-        let uri = "mongodb://" + auth + hosts + database + params;
+        let uri = "mongodb://" + auth + hosts + params;
 
         return uri;
     }

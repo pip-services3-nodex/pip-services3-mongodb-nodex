@@ -328,7 +328,7 @@ export class MongoDbPersistence<T> implements IReferenceable, IUnreferenceable, 
         this._databaseName = this._connection.getDatabaseName();
         
         try {
-            let collection = await this._db.collection(this._collectionName);
+            let collection = this._db.collection(this._collectionName);
 
             // Define database schema
             this.defineSchema();

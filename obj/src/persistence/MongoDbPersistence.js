@@ -256,7 +256,7 @@ class MongoDbPersistence {
             this._db = this._connection.getDatabase();
             this._databaseName = this._connection.getDatabaseName();
             try {
-                let collection = yield this._db.collection(this._collectionName);
+                let collection = this._db.collection(this._collectionName);
                 // Define database schema
                 this.defineSchema();
                 // Recreate indexes

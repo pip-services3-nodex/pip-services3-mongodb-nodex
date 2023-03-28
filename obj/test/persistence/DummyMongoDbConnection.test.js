@@ -24,11 +24,13 @@ suite('DummyMongoDbConnection', () => {
     let mongoHost = process.env['MONGO_SERVICE_HOST'] || 'localhost';
     let mongoPort = process.env['MONGO_SERVICE_PORT'] || 27017;
     let mongoDatabase = process.env['MONGO_DB'] || 'test';
+    let mongoUser = process.env['MONGO_USER'] || '';
+    let mongoPass = process.env['MONGO_PASS'] || '';
     if (mongoUri == null && mongoHost == null) {
         return;
     }
     setup(() => __awaiter(void 0, void 0, void 0, function* () {
-        let dbConfig = pip_services3_commons_nodex_1.ConfigParams.fromTuples('connection.uri', mongoUri, 'connection.host', mongoHost, 'connection.port', mongoPort, 'connection.database', mongoDatabase);
+        let dbConfig = pip_services3_commons_nodex_1.ConfigParams.fromTuples('connection.uri', mongoUri, 'connection.host', mongoHost, 'connection.port', mongoPort, 'connection.database', mongoDatabase, 'credential.username', mongoUser, 'credential.password', mongoPass);
         connection = new MongoDbConnection_1.MongoDbConnection();
         connection.configure(dbConfig);
         persistence = new DummyMongoDbPersistence_1.DummyMongoDbPersistence();
