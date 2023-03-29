@@ -109,17 +109,25 @@ class MongoDbConnectionResolver {
                 hosts += ',';
             hosts += host + (port == null ? '' : ':' + port);
         }
+        // Define database
+        let database = '';
+        for (let connection of connections) {
+            database = database || connection.getAsNullableString("database");
+        }
+        if (database.length > 0) {
+            database = '/' + database;
+        }
         // Define authentication part
         let auth = '';
         if (credential) {
-            let username = encodeURIComponent(credential.getUsername());
+            let username = credential.getUsername();
             if (username) {
-                let password = encodeURIComponent(credential.getPassword());
+                let password = credential.getPassword();
                 if (password) {
-                    auth = username + ':' + password + '@';
+                    auth = encodeURIComponent(username) + ':' + encodeURIComponent(password) + '@';
                 }
                 else {
-                    auth = username + '@';
+                    auth = encodeURIComponent(username) + '@';
                 }
             }
         }
@@ -137,17 +145,17 @@ class MongoDbConnectionResolver {
             if (params.length > 0) {
                 params += '&';
             }
-            params += key;
+            params += encodeURIComponent(key);
             let value = options.getAsString(key);
             if (value != null) {
-                params += '=' + value;
+                params += '=' + encodeURIComponent(value);
             }
         }
         if (params.length > 0) {
             params = '?' + params;
         }
         // Compose uri
-        let uri = "mongodb://" + auth + hosts + params;
+        let uri = "mongodb://" + auth + hosts + database + params;
         return uri;
     }
     /**

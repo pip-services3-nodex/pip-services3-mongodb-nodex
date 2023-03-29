@@ -54,15 +54,15 @@ export class MongoDbConnectionResolver implements IReferenceable, IConfigurable 
     }
 
     /**
-	 * Sets references to dependent components.
-	 * 
-	 * @param references 	references to locate the component dependencies. 
+     * Sets references to dependent components.
+     * 
+     * @param references 	references to locate the component dependencies. 
      */
     public setReferences(references: IReferences): void {
         this._connectionResolver.setReferences(references);
         this._credentialResolver.setReferences(references);
     }
-    
+
     private validateConnection(correlationId: string, connection: ConnectionParams): void {
         let uri = connection.getUri();
         if (uri != null) return null;
@@ -113,16 +113,24 @@ export class MongoDbConnectionResolver implements IReferenceable, IConfigurable 
             hosts += host + (port == null ? '' : ':' + port);
         }
 
+        // Define database
+        let database = '';
+        for (let connection of connections) {
+            database = database || connection.getAsNullableString("database");
+        }
+        if (database.length > 0) {
+            database = '/' + database;
+        }
         // Define authentication part
         let auth = '';
         if (credential) {
-            let username = encodeURIComponent(credential.getUsername());
+            let username = credential.getUsername();
             if (username) {
-                let password = encodeURIComponent(credential.getPassword());
+                let password = credential.getPassword();
                 if (password) {
-                    auth = username + ':' + password + '@';
+                    auth = encodeURIComponent(username) + ':' + encodeURIComponent(password) + '@';
                 } else {
-                    auth = username + '@';
+                    auth = encodeURIComponent(username) + '@';
                 }
             }
         }
@@ -142,11 +150,11 @@ export class MongoDbConnectionResolver implements IReferenceable, IConfigurable 
                 params += '&';
             }
 
-            params += key;
+            params += encodeURIComponent(key);
 
             let value = options.getAsString(key);
             if (value != null) {
-                params += '=' + value;
+                params += '=' + encodeURIComponent(value);
             }
         }
         if (params.length > 0) {
@@ -154,7 +162,7 @@ export class MongoDbConnectionResolver implements IReferenceable, IConfigurable 
         }
 
         // Compose uri
-        let uri = "mongodb://" + auth + hosts + params;
+        let uri = "mongodb://" + auth + hosts + database + params;
 
         return uri;
     }
@@ -168,7 +176,7 @@ export class MongoDbConnectionResolver implements IReferenceable, IConfigurable 
     public async resolve(correlationId: string): Promise<string> {
         let connections = await this._connectionResolver.resolveAll(correlationId);
         this.validateConnections(correlationId, connections);
-        
+
         let credential = await this._credentialResolver.lookup(correlationId);
         // Credentials are not validated right now
 
