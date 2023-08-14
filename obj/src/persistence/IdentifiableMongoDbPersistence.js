@@ -184,7 +184,7 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
             delete newItem.id;
             newItem._id = item.id;
             // Auto generate id
-            if (newItem._id == null && this._autoGenerateId) {
+            if (this.isEmpty(newItem._id) && this._autoGenerateId) {
                 newItem._id = pip_services3_commons_nodex_1.IdGenerator.nextLong();
             }
             return yield _super.create.call(this, correlationId, newItem);
@@ -208,7 +208,7 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
             delete newItem.id;
             newItem._id = item.id;
             // Auto generate id
-            if (newItem._id == null && this._autoGenerateId) {
+            if (this.isEmpty(newItem._id) && this._autoGenerateId) {
                 newItem._id = pip_services3_commons_nodex_1.IdGenerator.nextLong();
             }
             newItem = this.convertFromPublic(newItem);
@@ -236,7 +236,7 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
      */
     update(correlationId, item) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (item == null || item.id == null) {
+            if (item == null || this.isEmpty(item.id)) {
                 return null;
             }
             let newItem = Object.assign({}, item);
@@ -263,7 +263,7 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
      */
     updatePartially(correlationId, id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (data == null || id == null) {
+            if (data == null || id == null || this.isEmpty(id)) {
                 return null;
             }
             let newItem = data.getAsObject();
@@ -306,6 +306,21 @@ class IdentifiableMongoDbPersistence extends MongoDbPersistence_1.MongoDbPersist
             let filter = { _id: { $in: ids } };
             return yield this.deleteByFilter(correlationId, filter);
         });
+    }
+    /**
+     * Checks if value is empty
+     * @param value any value
+     * @returns true if value empty, other false
+     */
+    isEmpty(value) {
+        const type = typeof value;
+        if (value !== null && type === 'object' || type === 'function') {
+            const props = Object.keys(value);
+            if (props.length === 0) {
+                return true;
+            }
+        }
+        return !value;
     }
 }
 exports.IdentifiableMongoDbPersistence = IdentifiableMongoDbPersistence;

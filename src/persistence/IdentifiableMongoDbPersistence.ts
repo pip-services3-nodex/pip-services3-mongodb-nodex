@@ -184,7 +184,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
         newItem._id = item.id;
 
         // Auto generate id
-        if (newItem._id == null && this._autoGenerateId) {
+        if (this.isEmpty(newItem._id) && this._autoGenerateId) {
             newItem._id = IdGenerator.nextLong();
         }
 
@@ -210,7 +210,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
         newItem._id = item.id;
 
         // Auto generate id
-        if (newItem._id == null && this._autoGenerateId) {
+        if (this.isEmpty(newItem._id) && this._autoGenerateId) {
             newItem._id = IdGenerator.nextLong();
         }
 
@@ -243,7 +243,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
      * @returns                 the updated item.
      */
     public async update(correlationId: string, item: T): Promise<T> {
-        if (item == null || item.id == null) {
+        if (item == null || this.isEmpty(item.id)) {
             return null;
         }
 
@@ -274,7 +274,7 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
      * @returns                 the updated item.
      */
     public async updatePartially(correlationId: string, id: K, data: AnyValueMap): Promise<T> {            
-        if (data == null || id == null) {
+        if (data == null || id == null || this.isEmpty(id)) {
             return null;
         }
 
@@ -322,5 +322,21 @@ export class IdentifiableMongoDbPersistence<T extends IIdentifiable<K>, K> exten
     public async deleteByIds(correlationId: string, ids: K[]): Promise<void> {
         let filter = { _id: { $in: ids } };
         return await this.deleteByFilter(correlationId, filter);
+    }
+
+    /**
+     * Checks if value is empty
+     * @param value any value
+     * @returns true if value empty, other false
+     */
+    protected isEmpty(value: any) {
+        const type = typeof value;
+        if (value !== null && type === 'object' || type === 'function') {
+            const props = Object.keys(value);
+            if (props.length === 0) { 
+                return true;
+            } 
+        } 
+        return !value;
     }
 }
